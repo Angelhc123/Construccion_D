@@ -1,0 +1,75 @@
+services:
+
+  # SQL Server
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: lecturaIA-db
+    restart: unless-stopped
+    environment:
+      SA_PASSWORD: "Password123!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    networks:
+      - lecturaIA-network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Password123!", "-Q", "SELECT 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 10
+
+  # Backend API (.NET)
+  backend:
+    build:
+      context: ./LecturaIA.API
+      dockerfile: Dockerfile
+    container_name: lecturaIA-backend
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+    env_file:
+      - ./LecturaIA.API/.env.production
+    depends_on:
+      - database
+    volumes:
+      - lectura-images:/app/wwwroot/images
+    networks:
+      - lecturaIA-network
+
+  # Frontend React (Vite + Nginx interno)
+  frontend:
+    build:
+      context: ./LecturaIA.Frontend
+      dockerfile: Dockerfile
+    container_name: lecturaIA-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - lecturaIA-network
+
+  # Reverse Proxy (ÚNICA entrada al sistema)
+  nginx:
+    image: nginx:alpine
+    container_name: lecturaIA-nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - lecturaIA-network
+
+networks:
+  lecturaIA-network:
+    driver: bridge
+
+volumes:
+  lectura-images:
+  sql-data:

@@ -1,0 +1,40 @@
+@LecturaIA.API_HostAddress = http://localhost:5267
+
+### ============================================
+### TEST CUESTIONARIOS CON OPENAI
+### ============================================
+
+### PASO 1: Login como Estudiante
+# @name login
+POST {{LecturaIA.API_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "mf2018000597@virtual.upt.pe",
+  "password": "Almosteasy123@"
+}
+
+###
+
+### PASO 2: Generar cuestionario para sesión existente
+POST {{LecturaIA.API_HostAddress}}/api/Cuestionarios/generar
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "sesionLecturaId": "27CE0ACF-D019-4370-B723-0F2C9365CF2"
+}
+
+###
+
+### PASO 3: Obtener lecturas disponibles
+GET {{LecturaIA.API_HostAddress}}/api/Lecturas
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+### PASO 4: Ver estado del cuestionario
+GET {{LecturaIA.API_HostAddress}}/api/Cuestionarios/sesion/27CE0ACF-D019-4370-B723-0F2C9365CF2
+Authorization: Bearer {{login.response.body.token}}
+
+###
