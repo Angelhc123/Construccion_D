@@ -14,8 +14,12 @@ COPY . .
 # Remove local .env file to ensure production env is used
 RUN rm -f .env
 
-# Copy .env.production for build
-COPY .env.production .env.production
+# Receive backend URL as build argument
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+# Create .env.production with the build arg (replaces the COPY)
+RUN echo "VITE_API_URL=${VITE_API_URL}" > .env.production
 
 # Build the application (Vite will use .env.production automatically)
 RUN npm run build
