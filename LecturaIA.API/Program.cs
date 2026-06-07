@@ -129,7 +129,7 @@ public class Program
                             "http://localhost:5000",
                             "http://localhost:5000", // Vite ports local
                             "http://lecturasia.serveblog.net", // Producción
-                            "https://lecturasia.serveblog.net" // Producción HTTPS
+                            "https://lecturasia.serveblog.net", // Producción HTTPS
                             "https://construccion-d.vercel.app"
                           )
                           .AllowAnyHeader()
