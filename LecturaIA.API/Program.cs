@@ -101,6 +101,7 @@ public class Program
 
         // Register Services
         builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddHttpClient();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<AdminService>();
         builder.Services.AddScoped<AyudaService>();
