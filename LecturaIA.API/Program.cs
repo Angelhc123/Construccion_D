@@ -131,7 +131,9 @@ public class Program
                             "http://localhost:5000", // Vite ports local
                             "http://lecturasia.serveblog.net", // Producción
                             "https://lecturasia.serveblog.net", // Producción HTTPS
-                            "https://construccion-d.vercel.app"
+                            "https://construccion-d.vercel.app",
+                            "https://construccion-d-git-main-angels-projects-0754c115.vercel.app",
+                            "https://construccion-f1f3ps34c-angels-projects-0754c115.vercel.app"
                           )
                           .AllowAnyHeader()
                           .AllowAnyMethod()
